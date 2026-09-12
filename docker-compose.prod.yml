@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: library/postgres:13
+    container_name: rsoi-lab01-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./postgres/:/docker-entrypoint-initdb.d/
+
+  app:
+    image: ${APP_IMAGE}
+    container_name: rsoi-lab01-app
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      PORT: 8080
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: program
+      DB_PASSWORD: test
+      DB_NAME: persons
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-data:
