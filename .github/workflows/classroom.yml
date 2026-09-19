@@ -52,14 +52,6 @@ jobs:
           push: true
           tags: ${{ steps.image.outputs.name }}:latest
 
-      # docker-compose.prod.yml, deploy.sh and postgres/ are placed on the
-      # server once during provisioning (not pushed by CI) - the deploy
-      # user's SSH key is locked to a forced command (see
-      # deploy/ssh-wrapper.sh) that only ever runs this exact string, so
-      # there is no file-upload path for this key to abuse. The image is
-      # pulled anonymously - no registry credentials are ever placed on the
-      # server. The GHCR package was made public after the first push
-      # (package Settings -> Change visibility) so pulling needs no login.
       - name: Deploy to server
         if: github.event_name == 'push'
         uses: appleboy/ssh-action@v1.0.3
